@@ -24,4 +24,52 @@
 .active {
   text-decoration: underline;
 }
+.ingredient {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin: 6px;
+  display: inline-block;
+  font-family: monospace;
+}
+
+.char {
+  display: inline-block;
+  padding: 0 2px;
+  border-bottom: 1px solid #ddd;
+}
+
+.char.active {
+  text-decoration: underline;
+}
+
+.char.correct {
+  color: green;
+}
+
+.char.incorrect {
+  color: red;
+}
+
+.used {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+.ingredient.wrong {
+  border: 2px solid red;
+  opacity: 0.6;
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+.ingredient.wrong {
+  animation: shake 0.4s ease;
+  border: 2px solid red;
+  opacity: 0.8;
+}
 
