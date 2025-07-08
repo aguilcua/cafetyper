@@ -1,15 +1,39 @@
 export const drinks = {
-  cappuccino: ['espresso', 'milk', 'foam'],
-  americano: ['espresso', 'water'],
-  latte: ['espresso', 'milk'],
+  cappuccino: {
+    ingredients: ['espresso', 'milk', 'foam'],
+  },
+  americano: {
+    ingredients: ['espresso', 'water'],
+  },
+  latte: {
+    ingredients: ['espresso', 'milk'],
+  },
+  mocha: {
+    ingredients: ['espresso', 'milk', 'chocolate'],
+  },
 };
 
-export const customerPhrases = [
-  "Ah, nothing like a sunny day for a cappuccino...",
-  "Can I grab something strong like an americano?",
-  "I need a latte to survive this Monday.",
+export const customerOrders = [
+  {
+    quote: "Mornings demand a smooth cappuccino with some nice foam.",
+    drink: "cappuccino"
+  },
+  {
+    quote: "Give me an americano, I’ve got a long day ahead.",
+    drink: "americano"
+  },
+  {
+    quote: "A latte sounds perfect for this rainy day.",
+    drink: "latte"
+  },
+  {
+    quote: "Chocolate and coffee, please — surprise me with a mocha.",
+    drink: "mocha"
+  },
 ];
 
+
 export const wordPool = [
-  "giraffe", "volcano", "nebula", "python", "shadow", "crayon", "lunar"
+  "giraffe", "volcano", "nebula", "python", "shadow", "crayon", "lunar",
+  
 ];

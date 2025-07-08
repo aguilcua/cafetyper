@@ -1,4 +1,4 @@
-import { customerPhrases } from '../data.js';
+import { customerOrders } from '../data.js';
 import { resetState, setCurrentDrink } from '../gameState.js';
 import { startIngredientView } from './ingredientView.js';
 
@@ -6,30 +6,28 @@ let phrase = '';
 let currentIndex = 0;
 
 export function startOrderView() {
+  //reset from the previous order screen if any.
   resetState();
-  phrase = customerPhrases[Math.floor(Math.random() * customerPhrases.length)];
+  //pick a random order from list of orders
+  const order = customerOrders[Math.floor(Math.random() * customerOrders.length)];
+  phrase = order.quote;
+  setCurrentDrink(order.drink);
+  //reset cursor to 0
   currentIndex = 0;
 
   document.getElementById('orderView').style.display = 'block';
   const container = document.getElementById('phraseContainer');
   container.innerHTML = '';
 
-  // Render each character with correct spacing
+  //split the phrase into different words
   phrase.split('').forEach((char, i) => {
     const span = document.createElement('span');
-    span.textContent = char === ' ' ? '\u00A0' : char; // Use non-breaking space
+    span.textContent = char === ' ' ? '\u00A0' : char;
     span.classList.add('char');
     if (i === 0) span.classList.add('active');
     container.appendChild(span);
   });
 
-  // Set currentDrink
-if (phrase.includes("cappuccino")) setCurrentDrink("cappuccino");
-else if (phrase.includes("americano")) setCurrentDrink("americano");
-else setCurrentDrink("latte");
-
-
-  // Attach key listener
   window.addEventListener('keydown', handleTyping);
 }
 
