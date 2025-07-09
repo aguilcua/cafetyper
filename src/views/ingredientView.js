@@ -15,13 +15,15 @@ export function startIngredientView() {
 
   const ingredientList = document.getElementById("ingredientList");
   const view = document.getElementById("ingredientView");
+  const drinkTitle = document.getElementById("drinkTitle");
+  const drinkName = getCurrentDrink();
+  drinkTitle.textContent = `Now making: ${drinkName.charAt(0).toUpperCase() + drinkName.slice(1)}`;
 
   view.style.display = "block";
   ingredientList.innerHTML = "";
   currentTargets = [];
   currentTyped = "";
 
-  const drinkName = getCurrentDrink();
   const realIngredients = drinks[drinkName].ingredients;
   const decoyOptions = drinks[drinkName].decoys ?? [];
   const decoysToAdd = 2;

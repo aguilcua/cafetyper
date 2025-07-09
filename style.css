@@ -73,3 +73,8 @@
   opacity: 0.8;
 }
 
+.drink-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
