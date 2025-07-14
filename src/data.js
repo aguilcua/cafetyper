@@ -60,10 +60,6 @@ export const customerOrders = [
     drink: "mocha",
   },
   {
-    quote: "Hey Hey! It's so hot today! I'll have a Cappuccino!",
-    drink: "cappuccino",
-  },
-  {
     quote: "Feeling fancy today, Let me have a flat white today.",
     drink: "flatwhite",
   },
@@ -86,6 +82,8 @@ export const customerOrders = [
     drink: "macchiato",
   },
   { quote: "A basic black coffee. Keep it simple.", drink: "black" },
+
+  {quote: "I need something to take the edge off. Coffee black.", drink: "black"},
 ];
 
 export const wordPool = {

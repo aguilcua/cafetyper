@@ -4,6 +4,11 @@ import {
   requiredIngredients,
   usedIngredients,
   getTypingStats,
+  addMoney,
+  getMoney,
+  getTimer,
+  calculateTip,
+  getDayNumber
 } from "../gameState.js";
 import { startResultView } from "./resultView.js";
 
@@ -12,6 +17,9 @@ let currentTyped = ""; // global typed string
 let typedWrongIngredient = false;
 
 export function startIngredientView(dayNumber) {
+  const timer = getTimer();
+  document.getElementById("timerDisplay").textContent = `${timer.getRemaining()}s`;
+
   typedWrongIngredient = false;
   usedIngredients.length = 0;
 
@@ -30,7 +38,11 @@ export function startIngredientView(dayNumber) {
   const realIngredients = drinks[drinkName].ingredients;
   const decoyOptions = drinks[drinkName].decoys ?? [];
 
-  const difficulty = getDifficulty(dayNumber);
+  const difficulty = getDifficulty(dayNumber, wpm);
+const temp = document.createElement('div');
+temp.textContent = `Adjusted difficulty: ${difficulty.toFixed(2)} (Day ${dayNumber}, WPM: ${wpm})`;
+document.body.appendChild(temp);
+
   const decoysToAdd = difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
 
   requiredIngredients.splice(0, requiredIngredients.length, ...realIngredients);
@@ -47,6 +59,7 @@ export function startIngredientView(dayNumber) {
   const allIngredients = [...realIngredients, ...decoys];
   shuffleArray(allIngredients);
   const usedWords = new Set();
+  const usedFirstletters = new Set();
 
   allIngredients.forEach((ingredient) => {
     let word = null;
@@ -56,26 +69,40 @@ export function startIngredientView(dayNumber) {
       const tier = getWordDifficultyTier(difficulty);
       const pool = wordPool[tier] ?? [];
 
-      const candidates = pool.filter((w) => !usedWords.has(w));
+      const candidates = pool.filter((w) => {
+        const firstLetter = w[0].toLowerCase();
+        return !usedWords.has(w) && !usedFirstletters.has(firstLetter);
+      });
       if (candidates.length > 0) {
         word = candidates[Math.floor(Math.random() * candidates.length)];
         usedWords.add(word);
+        usedFirstletters.add(word[0].toLowerCase());
       }
 
       attempts++;
     }
 
-    // Fallback: if no unique word could be found
+    // fallback
     if (!word) {
       const fallbackPool = Object.values(wordPool)
         .flat()
-        .filter((w) => !usedWords.has(w));
-      word = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
-      usedWords.add(word);
+        .filter((w) => !usedWords.has(w) && !usedFirstletters.has(w[0].toLowerCase()));
+        if (fallbackPool.length > 0){
+          word = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+          usedWords.add(word);
+          usedFirstletters.add(word[0].toLowerCase());
+        } else {
+          const lastResortPool = Object.values(wordPool.flat().filter((w) => !usedWords.has(w)));
+          word = lastResortPool[Math.floor(Math.random() * lastResortPool.length)];
+          usedWords.add(word);
+          usedFirstletters.add(word[0].toLowerCase());
+        }
     }
 
     const container = document.createElement("div");
     container.classList.add("ingredient");
+    //TODO add images of ingredients
+    container.style.backgroundImage = "url('src\images\butter.jpg')"; 
     container.dataset.ingredient = ingredient;
 
     const label = document.createElement("div");
@@ -170,7 +197,7 @@ function handleGlobalTyping(e) {
           () => {
             box.classList.remove("wrong");
             window.removeEventListener("keydown", handleGlobalTyping);
-            startIngredientView();
+            startIngredientView(getDayNumber());
           },
           { once: true }
         );
@@ -194,6 +221,14 @@ function handleGlobalTyping(e) {
   if (usedIngredients.length === requiredIngredients.length) {
     window.removeEventListener("keydown", handleGlobalTyping);
     document.getElementById("ingredientView").style.display = "none";
+    
+    const timeLeft = getTimer().getRemaining();
+    const tip = calculateTip(timeLeft, 60, 15); // 60s $15 max tip
+    addMoney(tip);
+
+    const moneyDisplay = document.getElementById("moneyDisplay");
+    moneyDisplay.textContent = `Total: $${getMoney().toFixed(2)}`;
+
     startResultView();
   }
 }
@@ -204,12 +239,20 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-function getDifficulty(dayNumber, speedFactor) {
+function getDifficulty(dayNumber, wpm) {
   const base = 1;
   const dayMultiplier = Math.pow(1.2, dayNumber);
 
+  let speedFactor = 1;
+  if (wpm < 45) {
+    speedFactor = 0.8;
+  } else if (wpm >= 70) {
+    speedFactor = 1.2;
+  }
+
   return base * dayMultiplier * speedFactor;
 }
+
 function getWordDifficultyTier(difficulty) {
   const weights = {
     1: Math.max(0.7 - 0.05 * difficulty, 0.1),

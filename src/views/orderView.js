@@ -1,5 +1,5 @@
 import { customerOrders } from '../data.js';
-import { resetState, setCurrentDrink, setTypingStats } from '../gameState.js';
+import { resetState, setCurrentDrink, setTypingStats, getTimer, getDayNumber } from '../gameState.js';
 import { startIngredientView } from './ingredientView.js';
 
 let phrase = '';
@@ -7,8 +7,18 @@ let currentIndex = 0;
 let typingStartTime = 0;
 let errorCount = 0;
 
-export function startOrderView() {
-  let typingStartTime = Date.now();
+export function startOrderView(day) {
+  typingStartTime = 0; //upon new order typing speed is reset
+  const timer = getTimer();
+  timer.start(60, updateTimerUI, () => {
+    console.log("Times up!");
+    //do something when your time is up
+    endCurrentOrder(false);
+  });
+
+  function updateTimerUI(time) {
+    document.getElementById("timerDisplay").textContent = `${time}s`;
+  }
   //reset from the previous order screen if any.
   resetState();
   errorCount = 0;
@@ -37,6 +47,10 @@ export function startOrderView() {
 }
 
 function handleTyping(e) {
+  if(currentIndex === 0 && typingStartTime === 0) {
+    typingStartTime = Date.now(); //only on first keypress
+    console.log("Typing started");
+  }
   const container = document.getElementById('phraseContainer');
   const spans = container.querySelectorAll('span');
   const expectedChar = phrase[currentIndex];
@@ -68,7 +82,7 @@ function handleTyping(e) {
       const wordCount = phrase.trim().split(/\s+/).length;
       const wpm = wordCount / durationInMinutes;
       setTypingStats({wpm, errors: errorCount});
-      startIngredientView();
+      startIngredientView(getDayNumber(), wpm);
     }
   } else {
     // Show incorrect feedback
@@ -81,8 +95,3 @@ function handleTyping(e) {
     }, 150); // Flash red then return to active
   }
 }
-function getAdjustedDifficulty(dayNumber, wpm){
-  const base = getDifficultyLevel(dayNumber);
-
-}
-
