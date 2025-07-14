@@ -3,16 +3,19 @@ import {
   getCurrentDrink,
   requiredIngredients,
   usedIngredients,
+  getTypingStats,
 } from "../gameState.js";
 import { startResultView } from "./resultView.js";
 
 let currentTargets = []; // tracks progress through each target word
 let currentTyped = ""; // global typed string
 let typedWrongIngredient = false;
-export function startIngredientView() {
+
+export function startIngredientView(dayNumber) {
   typedWrongIngredient = false;
   usedIngredients.length = 0;
 
+  const { wpm, errors } = getTypingStats();
   const ingredientList = document.getElementById("ingredientList");
   const view = document.getElementById("ingredientView");
   const drinkTitle = document.getElementById("drinkTitle");
@@ -26,7 +29,9 @@ export function startIngredientView() {
 
   const realIngredients = drinks[drinkName].ingredients;
   const decoyOptions = drinks[drinkName].decoys ?? [];
-  const decoysToAdd = 2;
+
+  const difficulty = getDifficulty(dayNumber);
+  const decoysToAdd = difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
 
   requiredIngredients.splice(0, requiredIngredients.length, ...realIngredients);
   usedIngredients.length = 0;
@@ -41,14 +46,33 @@ export function startIngredientView() {
 
   const allIngredients = [...realIngredients, ...decoys];
   shuffleArray(allIngredients);
+  const usedWords = new Set();
 
-  const wordAssignments = {};
-  const wordPoolShuffled = [...wordPool];
-  shuffleArray(wordPoolShuffled);
+  allIngredients.forEach((ingredient) => {
+    let word = null;
+    let attempts = 0;
 
-  allIngredients.forEach((ingredient, index) => {
-    const word = wordPoolShuffled[index];
-    wordAssignments[ingredient] = word;
+    while (attempts < 10 && !word) {
+      const tier = getWordDifficultyTier(difficulty);
+      const pool = wordPool[tier] ?? [];
+
+      const candidates = pool.filter((w) => !usedWords.has(w));
+      if (candidates.length > 0) {
+        word = candidates[Math.floor(Math.random() * candidates.length)];
+        usedWords.add(word);
+      }
+
+      attempts++;
+    }
+
+    // Fallback: if no unique word could be found
+    if (!word) {
+      const fallbackPool = Object.values(wordPool)
+        .flat()
+        .filter((w) => !usedWords.has(w));
+      word = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+      usedWords.add(word);
+    }
 
     const container = document.createElement("div");
     container.classList.add("ingredient");
@@ -96,8 +120,8 @@ function handleGlobalTyping(e) {
   let matched = false;
 
   // Find all incomplete targets that start with currentTyped
-  const candidates = currentTargets.filter(t =>
-    !t.complete && t.word.startsWith(currentTyped)
+  const candidates = currentTargets.filter(
+    (t) => !t.complete && t.word.startsWith(currentTyped)
   );
 
   if (candidates.length > 0) {
@@ -105,9 +129,9 @@ function handleGlobalTyping(e) {
 
     // If switching targets, reset all progress
     if (currentTarget && currentTarget !== target) {
-      currentTargets.forEach(t => {
+      currentTargets.forEach((t) => {
         if (!t.complete && t.progress > 0) {
-          t.chars.forEach(span => span.classList.remove("correct", "active"));
+          t.chars.forEach((span) => span.classList.remove("correct", "active"));
           t.progress = 0;
           t.chars[0].classList.add("active");
         }
@@ -132,26 +156,32 @@ function handleGlobalTyping(e) {
       currentTarget = null;
       currentTyped = "";
 
-      const box = document.querySelector(`[data-ingredient="${target.ingredient}"]`);
+      const box = document.querySelector(
+        `[data-ingredient="${target.ingredient}"]`
+      );
       box.classList.add("used");
 
       if (target.isReal) {
         usedIngredients.push(target.ingredient);
       } else {
         box.classList.add("wrong");
-        box.addEventListener("animationend", () => {
-          box.classList.remove("wrong");
-          window.removeEventListener("keydown", handleGlobalTyping);
-          startIngredientView();
-        }, { once: true });
+        box.addEventListener(
+          "animationend",
+          () => {
+            box.classList.remove("wrong");
+            window.removeEventListener("keydown", handleGlobalTyping);
+            startIngredientView();
+          },
+          { once: true }
+        );
         return;
       }
     }
   } else {
     // No matching words, reset all progress
-    currentTargets.forEach(t => {
+    currentTargets.forEach((t) => {
       if (!t.complete && t.progress > 0) {
-        t.chars.forEach(span => span.classList.remove("correct", "active"));
+        t.chars.forEach((span) => span.classList.remove("correct", "active"));
         t.progress = 0;
         t.chars[0].classList.add("active");
       }
@@ -168,10 +198,40 @@ function handleGlobalTyping(e) {
   }
 }
 
-
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
+}
+function getDifficulty(dayNumber, speedFactor) {
+  const base = 1;
+  const dayMultiplier = Math.pow(1.2, dayNumber);
+
+  return base * dayMultiplier * speedFactor;
+}
+function getWordDifficultyTier(difficulty) {
+  const weights = {
+    1: Math.max(0.7 - 0.05 * difficulty, 0.1),
+    2: Math.min(0.2 + 0.03 * difficulty, 0.4),
+    3: Math.min(0.08 + 0.02 * difficulty, 0.3),
+    4: Math.min(0.02 + 0.01 * difficulty, 0.2),
+  };
+
+  const roll = Math.random();
+  let sum = 0;
+  for (let tier = 1; tier <= 4; tier++) {
+    sum += weights[tier];
+    if (roll <= sum) return tier;
+  }
+  return 1;
+}
+
+function getCustomerCount(difficulty) {
+  const baseCustomers = 4;
+  return Math.floor(baseCustomers + difficulty * 0.5);
+}
+
+function extraOrderChance(difficulty) {
+  return Math.random() < 0.1 + difficulty + 0.05;
 }

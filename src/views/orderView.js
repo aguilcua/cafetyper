@@ -1,13 +1,18 @@
 import { customerOrders } from '../data.js';
-import { resetState, setCurrentDrink } from '../gameState.js';
+import { resetState, setCurrentDrink, setTypingStats } from '../gameState.js';
 import { startIngredientView } from './ingredientView.js';
 
 let phrase = '';
 let currentIndex = 0;
+let typingStartTime = 0;
+let errorCount = 0;
 
 export function startOrderView() {
+  let typingStartTime = Date.now();
   //reset from the previous order screen if any.
   resetState();
+  errorCount = 0;
+
   //pick a random order from list of orders
   const order = customerOrders[Math.floor(Math.random() * customerOrders.length)];
   phrase = order.quote;
@@ -54,9 +59,15 @@ function handleTyping(e) {
     if (spans[currentIndex]) {
       spans[currentIndex].classList.add('active');
     } else {
-      // All done
+      // Done typing
       window.removeEventListener('keydown', handleTyping);
       document.getElementById('orderView').style.display = 'none';
+      
+      const typingEndTime = Date.now();
+      const durationInMinutes = (typingEndTime - typingStartTime) / 60000;
+      const wordCount = phrase.trim().split(/\s+/).length;
+      const wpm = wordCount / durationInMinutes;
+      setTypingStats({wpm, errors: errorCount});
       startIngredientView();
     }
   } else {
@@ -69,5 +80,9 @@ function handleTyping(e) {
       span.classList.add('active');
     }, 150); // Flash red then return to active
   }
+}
+function getAdjustedDifficulty(dayNumber, wpm){
+  const base = getDifficultyLevel(dayNumber);
+
 }
 
