@@ -34,12 +34,16 @@
 
 .char {
   display: inline-block;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 2px black, 0 0 4px black;
   padding: 0 2px;
   border-bottom: 1px solid #ddd;
 }
 
 .char.active {
   text-decoration: underline;
+  text-shadow: 0 0 6px black;
 }
 
 .char.correct {
@@ -77,4 +81,25 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 12px;
+}
+.ingredient-label {
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 3px black, 0 0 5px black;
+  top: 5px;
+  left: 5px;
+  z-index: 2;
+}
+.enter-msg {
+  margin-top: 1em;
+  font-style: italic;
+  opacity: 0.8;
+}
+#daySummary {
+  position: absolute;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+  padding: 1em;
+  border-radius: 10px;
 }

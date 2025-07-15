@@ -35,10 +35,6 @@ export const drinks = {
     ingredients: ["espresso", "steamed milk"],
     decoys: ["foam", "sugar", "cocoa"],
   },
-  irish: {
-    ingredients: ["coffee", "whiskey", "cream"],
-    decoys: ["milk", "syrup", "nutmeg"],
-  },
   affogato: {
     ingredients: ["espresso", "ice cream"],
     decoys: ["milk", "whipped cream", "sugar"],
@@ -54,18 +50,14 @@ export const customerOrders = [
     quote: "Give me an americano, I've got a long day ahead.",
     drink: "americano",
   },
-  { quote: "A latte sounds perfect for this rainy day.", drink: "latte" },
+  { quote: "A latte sounds so good right now.", drink: "latte" },
   {
-    quote: "Chocolate and coffee, please - surprise me with a mocha.",
+    quote: "Chocolate and coffee, please may I have a mocha?",
     drink: "mocha",
   },
   {
-    quote: "Feeling fancy today, Let me have a flat white today.",
+    quote: "Feeling exquisite today, give me a flat white.",
     drink: "flatwhite",
-  },
-  {
-    quote: "I need something strong. Lets do an Irish Coffee.",
-    drink: "irish",
   },
   { quote: "Ice cream! Give me an Affogato RIGHT NOW!", drink: "affogato" },
   { quote: "Smooth Operator, lemme get uh... flatwhite", drink: "flatwhite" },
@@ -130,7 +122,7 @@ export const wordPool = {
     "cinnamon",
     "caramel",
     "coffee",
-    "frappé",
+    "frappe",
     "machine",
     "counter",
     "morning",

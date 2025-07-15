@@ -5,6 +5,8 @@ let typingStats = {
   wpm: 0,
   errors: 0,
 };
+let customerIndex = 0;
+let totalCustomers = 0;
 const MAX_TIP = 15;
 
 export let currentPhrase = null;
@@ -88,4 +90,49 @@ export function getMoney() {
 export function calculateTip(timeRemaining, totalTime = 60, maxTip = MAX_TIP) {
   const proportion = Math.max(0, (timeRemaining + 2) / totalTime);
   return Math.round(proportion * maxTip * 100) / 100; //round to 2 decimals
+}
+export function getDifficulty() {
+  const base = 1;
+  const dayMultiplier = Math.pow(1.2, dayNumber);
+  const {wpm} = typingStats;
+
+  let speedFactor = 1;
+  if (wpm < 45) {
+    speedFactor = 0.8;
+  } else if (wpm >= 70) {
+    speedFactor = 1.2;
+  }
+
+  return base * dayMultiplier * speedFactor;
+}
+
+export function getCustomerCount(difficulty = getDifficulty()) {
+  const baseCustomers = 2;
+  return Math.floor(baseCustomers + difficulty * 0.5);
+}
+
+function extraOrderChance(difficulty) {
+  return Math.random() < 0.1 + difficulty + 0.05;
+}
+
+export function startCustomerLoop() {
+  const difficulty = getDifficulty();
+  totalCustomers = getCustomerCount();
+  customerIndex = 0;
+}
+
+export function hasNextCustomer() {
+  return customerIndex <= totalCustomers;
+}
+
+export function nextCustomer() {
+  return customerIndex++;
+}
+
+export function getCustomerIndex() {
+  return customerIndex;
+}
+export function resetCustomerLoop() {
+  customerIndex = 0;
+  totalCustomers = 0;
 }

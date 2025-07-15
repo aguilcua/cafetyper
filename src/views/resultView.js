@@ -1,16 +1,19 @@
-import { currentDrink } from '../gameState.js';
-import { startOrderView } from './orderView.js';
+import { currentDrink, getCustomerIndex, getCustomerCount, nextCustomer, hasNextCustomer, advanceDay, getDayNumber } from '../gameState.js';
+import { showView } from '../viewController.js';
 
 export function startResultView() {
-  document.getElementById('resultView').style.display = 'block';
-  document.getElementById('resultMessage').textContent = `You made a ${currentDrink}! Nice job.`;
+  showView("resultView");
 
-  const btn = document.getElementById('nextCustomer');
-  btn.addEventListener('click', next);
+  const view = document.getElementById("resultView");
+  document.getElementById("resultMessage").textContent = `You made a ${currentDrink}! Nice job.`;
 
-  function next() {
-    document.getElementById('resultView').style.display = 'none';
-    btn.removeEventListener('click', next);
-    startOrderView();
+  function handleContinue(e) {
+    if (e.key === "Enter") {
+      document.removeEventListener("keydown", handleContinue);
+      showView("orderView");
+      window.dispatchEvent(new CustomEvent("resultContinue"));
+    }
   }
+
+  document.addEventListener("keydown", handleContinue);
 }

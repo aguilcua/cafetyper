@@ -1,5 +1,7 @@
 import { customerOrders } from '../data.js';
-import { resetState, setCurrentDrink, setTypingStats, getTimer, getDayNumber } from '../gameState.js';
+import { resetState, setCurrentDrink, setTypingStats, getTimer, getCustomerIndex, getCustomerCount } from '../gameState.js';
+import { playRandomKeySound, playWrongKeySound } from '../sound.js';
+import { showHUD } from '../viewController.js';
 import { startIngredientView } from './ingredientView.js';
 
 let phrase = '';
@@ -7,7 +9,7 @@ let currentIndex = 0;
 let typingStartTime = 0;
 let errorCount = 0;
 
-export function startOrderView(day) {
+export function startOrderView() {
   typingStartTime = 0; //upon new order typing speed is reset
   const timer = getTimer();
   timer.start(60, updateTimerUI, () => {
@@ -22,6 +24,11 @@ export function startOrderView(day) {
   //reset from the previous order screen if any.
   resetState();
   errorCount = 0;
+
+  
+  const customerDisplay = document.getElementById("customerDisplay");
+  customerDisplay.textContent = `Customer ${getCustomerIndex() + 1}/${getCustomerCount()}`;
+  showHUD(true);
 
   //pick a random order from list of orders
   const order = customerOrders[Math.floor(Math.random() * customerOrders.length)];
@@ -66,6 +73,7 @@ function handleTyping(e) {
 
   // Check correctness
   if (key === expectedChar) {
+    playRandomKeySound();
     span.classList.add('correct');
     span.classList.remove('active', 'incorrect');
     currentIndex++;
@@ -82,9 +90,10 @@ function handleTyping(e) {
       const wordCount = phrase.trim().split(/\s+/).length;
       const wpm = wordCount / durationInMinutes;
       setTypingStats({wpm, errors: errorCount});
-      startIngredientView(getDayNumber(), wpm);
+      startIngredientView();
     }
   } else {
+      playWrongKeySound();
     // Show incorrect feedback
     span.classList.add('incorrect');
     span.classList.remove('active');

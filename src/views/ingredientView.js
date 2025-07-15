@@ -8,15 +8,18 @@ import {
   getMoney,
   getTimer,
   calculateTip,
-  getDayNumber
+  getDayNumber,
+  getDifficulty,
 } from "../gameState.js";
+import { playRandomKeySound, playWrongKeySound } from "../sound.js";
+import { setDaySummaryContent, showView } from "../viewController.js";
 import { startResultView } from "./resultView.js";
 
 let currentTargets = []; // tracks progress through each target word
 let currentTyped = ""; // global typed string
 let typedWrongIngredient = false;
 
-export function startIngredientView(dayNumber) {
+export function startIngredientView() {
   const timer = getTimer();
   document.getElementById("timerDisplay").textContent = `${timer.getRemaining()}s`;
 
@@ -38,10 +41,7 @@ export function startIngredientView(dayNumber) {
   const realIngredients = drinks[drinkName].ingredients;
   const decoyOptions = drinks[drinkName].decoys ?? [];
 
-  const difficulty = getDifficulty(dayNumber, wpm);
-const temp = document.createElement('div');
-temp.textContent = `Adjusted difficulty: ${difficulty.toFixed(2)} (Day ${dayNumber}, WPM: ${wpm})`;
-document.body.appendChild(temp);
+  const difficulty = getDifficulty();
 
   const decoysToAdd = difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
 
@@ -102,11 +102,12 @@ document.body.appendChild(temp);
     const container = document.createElement("div");
     container.classList.add("ingredient");
     //TODO add images of ingredients
-    container.style.backgroundImage = "url('src\images\butter.jpg')"; 
+    setIngredientBackground(container, ingredient);
     container.dataset.ingredient = ingredient;
 
     const label = document.createElement("div");
     label.textContent = `${ingredient}:`;
+    label.classList.add("ingredient-label");
     container.appendChild(label);
 
     const wordBox = document.createElement("div");
@@ -154,6 +155,7 @@ function handleGlobalTyping(e) {
   if (candidates.length > 0) {
     const target = candidates[0];
 
+    playRandomKeySound();
     // If switching targets, reset all progress
     if (currentTarget && currentTarget !== target) {
       currentTargets.forEach((t) => {
@@ -197,7 +199,7 @@ function handleGlobalTyping(e) {
           () => {
             box.classList.remove("wrong");
             window.removeEventListener("keydown", handleGlobalTyping);
-            startIngredientView(getDayNumber());
+            startIngredientView();
           },
           { once: true }
         );
@@ -207,6 +209,7 @@ function handleGlobalTyping(e) {
   } else {
     // No matching words, reset all progress
     currentTargets.forEach((t) => {
+      playWrongKeySound();
       if (!t.complete && t.progress > 0) {
         t.chars.forEach((span) => span.classList.remove("correct", "active"));
         t.progress = 0;
@@ -228,7 +231,6 @@ function handleGlobalTyping(e) {
 
     const moneyDisplay = document.getElementById("moneyDisplay");
     moneyDisplay.textContent = `Total: $${getMoney().toFixed(2)}`;
-
     startResultView();
   }
 }
@@ -238,19 +240,6 @@ function shuffleArray(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-}
-function getDifficulty(dayNumber, wpm) {
-  const base = 1;
-  const dayMultiplier = Math.pow(1.2, dayNumber);
-
-  let speedFactor = 1;
-  if (wpm < 45) {
-    speedFactor = 0.8;
-  } else if (wpm >= 70) {
-    speedFactor = 1.2;
-  }
-
-  return base * dayMultiplier * speedFactor;
 }
 
 function getWordDifficultyTier(difficulty) {
@@ -269,12 +258,37 @@ function getWordDifficultyTier(difficulty) {
   }
   return 1;
 }
-
-function getCustomerCount(difficulty) {
-  const baseCustomers = 4;
-  return Math.floor(baseCustomers + difficulty * 0.5);
+export function showDaySummary() {
+  setDaySummaryContent(
+    getDayNumber() - 1,
+    getMoney(),
+    getTypingStats().wpm
+  );
+  showView("daySummary");
 }
 
-function extraOrderChance(difficulty) {
-  return Math.random() < 0.1 + difficulty + 0.05;
+function setIngredientBackground(container, ingredient) {
+  const imageBasePath = 'src/images/';
+  const fallbackImage = `${imageBasePath}shoebill.jpg`;
+  const normalized = ingredient.toLowerCase().replace(/\s+/g, '');
+  const imagePath = `${imageBasePath}${normalized}.jpg`;
+
+  const img = new Image();
+  img.src = imagePath;
+
+  img.onload = () => {
+    container.style.backgroundImage = `url('${imagePath}')`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPosition = 'center';
+  };
+
+  img.onerror = () => {
+    container.style.backgroundImage = `url('${fallbackImage}')`;
+    container.style.backgroundSize = 'cover';
+    container.style.backgroundPosition = 'center';
+  };
 }
+
+
+
+
