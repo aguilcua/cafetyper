@@ -43,6 +43,10 @@ export const drinks = {
 
 export const customerOrders = [
   {
+    quote: "Ballerina cappuccina, I need a cappucino!",
+    drink: "cappuccino",
+  },
+  {
     quote: "Mornings demand a smooth cappuccino with some nice foam.",
     drink: "cappuccino",
   },
@@ -59,7 +63,7 @@ export const customerOrders = [
     quote: "Feeling exquisite today, give me a flat white.",
     drink: "flatwhite",
   },
-  { quote: "Ice cream! Give me an Affogato RIGHT NOW!", drink: "affogato" },
+  { quote: "Ice cream! Give me an affogato RIGHT NOW!", drink: "affogato" },
   { quote: "Smooth Operator, lemme get uh... flatwhite", drink: "flatwhite" },
   {
     quote: "Im so tired, I need a boost. One espresso please.",
