@@ -45,41 +45,49 @@ export const customerOrders = [
   {
     quote: "Ballerina cappuccina, I need a cappucino!",
     drink: "cappuccino",
+    length: 41
   },
   {
     quote: "Mornings demand a smooth cappuccino with some nice foam.",
     drink: "cappuccino",
+    length: 56
   },
   {
     quote: "Give me an americano, I've got a long day ahead.",
     drink: "americano",
+    length: 48
   },
-  { quote: "A latte sounds so good right now.", drink: "latte" },
+  { quote: "A latte sounds so good right now.", drink: "latte", length: 33 },
   {
     quote: "Chocolate and coffee, please may I have a mocha?",
     drink: "mocha",
+    length: 48
   },
   {
     quote: "Feeling exquisite today, give me a flat white.",
     drink: "flatwhite",
+    length: 46
   },
-  { quote: "Ice cream! Give me an affogato RIGHT NOW!", drink: "affogato" },
-  { quote: "Smooth Operator, lemme get uh... flatwhite", drink: "flatwhite" },
+  { quote: "Ice cream! Give me an affogato RIGHT NOW!", drink: "affogato", length: 41},
+  { quote: "Smooth Operator, lemme get uh... flatwhite", drink: "flatwhite", length: 42},
   {
-    quote: "Im so tired, I need a boost. One espresso please.",
+    quote: "I'm so tired, I need a boost. One espresso please.",
     drink: "espresso",
+    length: 50
   },
   {
     quote: "I'm craving something chill. Frappuccino time!",
     drink: "frappuccino",
+    length: 46
   },
   {
     quote: "A macchiato please, I like a little foam on top.",
     drink: "macchiato",
+    length: 48
   },
-  { quote: "A basic black coffee. Keep it simple.", drink: "black" },
+  { quote: "A basic black coffee. Keep it simple.", drink: "black" , length: 37},
 
-  {quote: "I need something to take the edge off. Coffee black.", drink: "black"},
+  {quote: "I need something to take the edge off. Coffee black.", drink: "black", length: 52},
 ];
 
 export const wordPool = {

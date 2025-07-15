@@ -8,6 +8,7 @@ let phrase = '';
 let currentIndex = 0;
 let typingStartTime = 0;
 let errorCount = 0;
+let order = null;
 
 export function startOrderView() {
   typingStartTime = 0; //upon new order typing speed is reset
@@ -31,7 +32,7 @@ export function startOrderView() {
   showHUD(true);
 
   //pick a random order from list of orders
-  const order = customerOrders[Math.floor(Math.random() * customerOrders.length)];
+  order = customerOrders[Math.floor(Math.random() * customerOrders.length)];
   phrase = order.quote;
   setCurrentDrink(order.drink);
   //reset cursor to 0
@@ -86,10 +87,11 @@ function handleTyping(e) {
       document.getElementById('orderView').style.display = 'none';
       
       const typingEndTime = Date.now();
-      const durationInMinutes = (typingEndTime - typingStartTime) / 60000;
-      const wordCount = phrase.trim().split(/\s+/).length;
-      const wpm = wordCount / durationInMinutes;
+      const durationInSeconds = (typingEndTime - typingStartTime) / 1000;
+      const charCount = order.length;
+      const wpm = (charCount / 5) / (durationInSeconds /60);
       setTypingStats({wpm, errors: errorCount});
+      console.log('wpm:', wpm.toFixed(0));
       startIngredientView();
     }
   } else {

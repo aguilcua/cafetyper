@@ -42,8 +42,9 @@ export function startIngredientView() {
   const decoyOptions = drinks[drinkName].decoys ?? [];
 
   const difficulty = getDifficulty();
+  console.log('difficulty: ', difficulty.toFixed(2) );
 
-  const decoysToAdd = difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
+  const decoysToAdd = difficulty < 2 ? 1 : difficulty < 4 ? 2 : 3;
 
   requiredIngredients.splice(0, requiredIngredients.length, ...realIngredients);
   usedIngredients.length = 0;
