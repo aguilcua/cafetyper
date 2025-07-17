@@ -43,9 +43,9 @@ export const drinks = {
 
 export const customerOrders = [
   {
-    quote: "Ballerina cappuccina, I need a cappucino!",
+    quote: "Ballerina Cappuccina, I need a cappuccino!",
     drink: "cappuccino",
-    length: 41
+    length: 42
   },
   {
     quote: "Mornings demand a smooth cappuccino with some nice foam.",
