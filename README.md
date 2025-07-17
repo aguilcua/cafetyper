@@ -1,3 +1,5 @@
+[![](https://github.com/aguilcua/cafetyper/blob/9d8c5cb30600b2fb56c2c524cb7acdb4fa7c7ac9/src/images/cafetypetitle.png?raw=true)](https://aguilcua.github.io/cafetyper/)
+https://github.com/aguilcua/cafetyper/blob/9d8c5cb30600b2fb56c2c524cb7acdb4fa7c7ac9/src/images/cafetypetitle.png
 # cafetyper
 
 Cafetyper typing/memorization game featuring a roguelike gameplay loop. Gameplay focuses on taking customer orders and completing customers orders as fast as possible to meet your daily quota of revenue.
