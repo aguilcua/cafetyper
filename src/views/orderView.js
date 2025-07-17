@@ -1,7 +1,7 @@
 import { customerOrders } from '../data.js';
-import { resetState, setCurrentDrink, setTypingStats, getTimer, getCustomerIndex, getCustomerCount } from '../gameState.js';
+import { resetState, setCurrentDrink, setTypingStats, getTimer, getCustomerIndex, getCustomerCount, getMoney, getQuota } from '../gameState.js';
 import { playRandomKeySound, playWrongKeySound } from '../sound.js';
-import { showHUD } from '../viewController.js';
+import { showGameOverScreen, showHUD } from '../viewController.js';
 import { startIngredientView } from './ingredientView.js';
 
 let phrase = '';
@@ -13,10 +13,10 @@ let order = null;
 export function startOrderView() {
   typingStartTime = 0; //upon new order typing speed is reset
   const timer = getTimer();
-  timer.start(60, updateTimerUI, () => {
+  timer.start(45, updateTimerUI, () => {
     console.log("Times up!");
     //do something when your time is up
-    endCurrentOrder(false);
+    showGameOverScreen(getMoney(), getQuota());
   });
 
   function updateTimerUI(time) {

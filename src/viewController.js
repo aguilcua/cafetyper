@@ -4,6 +4,7 @@ const views = {
   ingredientView: document.getElementById("ingredientView"),
   resultView: document.getElementById("resultView"),
   daySummary: document.getElementById("daySummary"),
+  gameOverSummary: document.getElementById("gameOverScreen"),
 };
 
 export function showView(viewName) {
@@ -41,20 +42,35 @@ export function setDaySummaryContent(day, money, wpm) {
     alert("Shop not implemented yet!");
   };
 }
-export function showHUD(flag) {
-    const customerDisplay = document.getElementById("customerDisplay");
-    const timerDisplay = document.getElementById("timerDisplay");
-      const moneyDisplay = document.getElementById("moneyDisplay");
-        const dayDisplay = document.getElementById("dayDisplay");
-    if (flag) {
-        customerDisplay.style.display = 'block';
-  timerDisplay.style.display = 'block';
-  moneyDisplay.style.display = 'block';
-  dayDisplay.style.display = "block";
-    } else {
-        customerDisplay.style.display = 'none';
-  timerDisplay.style.display = 'none';
-  moneyDisplay.style.display = 'none';
-  dayDisplay.style.display = "none";
-    }
+export function showGameOverScreen(earned, quota) {
+  showHUD(false);
+  const gameOver = document.getElementById("gameOverScreen");
+  gameOver.innerHTML = `
+    <h2>Game Over</h2>
+    <p>You earned $${earned.toFixed(2)} but needed $${quota.toFixed(2)}.</p>
+    <button id="restartBtn">Restart</button>
+  `;
+  gameOver.style.display = 'block';
+
+  document.getElementById('restartBtn').onclick = () => {
+    window.location.reload(); // Or implement soft reset logic
+  };
 }
+export function showHUD(flag) {
+  const customerDisplay = document.getElementById("customerDisplay");
+  const timerDisplay = document.getElementById("timerDisplay");
+  const moneyDisplay = document.getElementById("moneyDisplay");
+  const dayDisplay = document.getElementById("dayDisplay");
+  if (flag) {
+    customerDisplay.style.display = "block";
+    timerDisplay.style.display = "block";
+    moneyDisplay.style.display = "block";
+    dayDisplay.style.display = "block";
+  } else {
+    customerDisplay.style.display = "none";
+    timerDisplay.style.display = "none";
+    moneyDisplay.style.display = "none";
+    dayDisplay.style.display = "none";
+  }
+}
+

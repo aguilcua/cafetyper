@@ -9,9 +9,6 @@
   gap: 4px;
 }
 
-.char {
-  border-bottom: 1px solid #ccc;
-}
 
 .correct {
   color: green;
@@ -32,27 +29,7 @@
   font-family: monospace;
 }
 
-.char {
-  display: inline-block;
-  color: white;
-  font-weight: bold;
-  text-shadow: 0 0 2px black, 0 0 4px black;
-  padding: 0 2px;
-  border-bottom: 1px solid #ddd;
-}
 
-.char.active {
-  text-decoration: underline;
-  text-shadow: 0 0 6px black;
-}
-
-.char.correct {
-  color: green;
-}
-
-.char.incorrect {
-  color: red;
-}
 
 .used {
   opacity: 0.5;
@@ -102,4 +79,93 @@
   color: black;
   padding: 1em;
   border-radius: 10px;
+}
+/* Latte background + font */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f3e5ab; /* Latte color */
+  color: #3e2f1c; /* Coffee text */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* HUD bar at top */
+#gameHUD {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #d2b48c; /* light brown */
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid #b58863;
+}
+
+/* Center container for views */
+.gameCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+/* View container (e.g. order, ingredient) */
+.view {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  min-width: 300px;
+  max-width: 600px;
+}
+
+/* Phrase typing style */
+#phraseContainer {
+  font-size: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+/* Typing feedback */
+.char {
+  padding: 2px 4px;
+}
+
+.char.active {
+  border-color: #6b4f3b;
+}
+
+.char.correct {
+  color: green;
+}
+
+.char.incorrect {
+  color: red;
+}
+
+/* Hidden class for toggling views */
+.hidden {
+  display: none;
+}
+
+/* Start menu styling */
+#startMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f3e5ab;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
 }

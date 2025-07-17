@@ -45,49 +45,77 @@ export const customerOrders = [
   {
     quote: "Ballerina Cappuccina, I need a cappuccino!",
     drink: "cappuccino",
-    length: 42
+    length: 42,
   },
   {
     quote: "Mornings demand a smooth cappuccino with some nice foam.",
     drink: "cappuccino",
-    length: 56
+    length: 56,
   },
   {
     quote: "Give me an americano, I've got a long day ahead.",
     drink: "americano",
-    length: 48
+    length: 48,
   },
   { quote: "A latte sounds so good right now.", drink: "latte", length: 33 },
   {
     quote: "Chocolate and coffee, please may I have a mocha?",
     drink: "mocha",
-    length: 48
+    length: 48,
   },
   {
     quote: "Feeling exquisite today, give me a flat white.",
     drink: "flatwhite",
-    length: 46
+    length: 46,
   },
-  { quote: "Ice cream! Give me an affogato RIGHT NOW!", drink: "affogato", length: 41},
-  { quote: "Smooth Operator, lemme get uh... flatwhite", drink: "flatwhite", length: 42},
+  {
+    quote: "Ice cream! Give me an affogato RIGHT NOW!",
+    drink: "affogato",
+    length: 41,
+  },
+  {
+    quote: "Smooth Operator, lemme get uh... flatwhite",
+    drink: "flatwhite",
+    length: 42,
+  },
   {
     quote: "I'm so tired, I need a boost. One espresso please.",
     drink: "espresso",
-    length: 50
+    length: 50,
   },
   {
     quote: "I'm craving something chill. Frappuccino time!",
     drink: "frappuccino",
-    length: 46
+    length: 46,
   },
   {
     quote: "A macchiato please, I like a little foam on top.",
     drink: "macchiato",
-    length: 48
+    length: 48,
   },
-  { quote: "A basic black coffee. Keep it simple.", drink: "black" , length: 37},
+  {
+    quote: "A basic black coffee. Keep it simple.",
+    drink: "black",
+    length: 37,
+  },
 
-  {quote: "I need something to take the edge off. Coffee black.", drink: "black", length: 52},
+  {
+    quote: "I need something to take the edge off. Coffee black.",
+    drink: "black",
+    length: 52,
+  },
+  {
+    quote: "Damn jimmy! this some serious gourmey coffee!",
+    drink: "black",
+    length: 45,
+  },
+  {
+    quote:
+      "Pumpkin spice latte please. I want it freezing though... actually I just want a regular coffee. Those white girl pumpkin spice lattes annoy me.",
+    drink: "black",
+    length: 143,
+  },
+  {quote: "Look at that subtle off-white coloring, the tasteful thickness of it. Oh my God. It even has a extra foam.", drink: "macchiato", length: 106},
 ];
 
 export const wordPool = {

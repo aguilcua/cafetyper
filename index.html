@@ -8,37 +8,40 @@
 </head>
 
 <body>
-
   <div id="startMenu">
     <h1>Café Typer</h1>
     <p>Press <strong>Enter</strong> to begin</p>
   </div>
+
   <div id="game">
     <div id="gameHUD">
-      <div id="timerDisplay" style="display: none;">60s</div>
-      <div id="customerDisplay" style="display: none;">Customer 1/4</div>
-      <div id="moneyDisplay" style="display: none;">Total: $0.00</div>
-      <div id="dayDisplay" style="display: none;">Day: 1</div>
+      <div id="timerDisplay">60s</div>
+      <div id="customerDisplay">Customer 1/4</div>
+      <div id="moneyDisplay">Total: $0.00</div>
+      <div id="dayDisplay">Day: 1</div>
     </div>
 
-    <div id="orderView">
-      <div id="phraseContainer"></div>
+    <div class="gameCenter">
+      <div id="orderView" class="view">
+        <div id="phraseContainer"></div>
+      </div>
+
+      <div id="ingredientView" class="view hidden">
+        <div id="drinkTitle" class="drink-title"></div>
+        <div id="ingredientList" class="ingredient-list"></div>
+      </div>
+
+      <div id="resultView" class="view hidden">
+        <p id="resultMessage"></p>
+        <p>Press <strong>Enter</strong> to continue</p>
+      </div>
+
+      <div id="gameOverScreen" class="view hidden"></div>
+      <div id="daySummary" class="view hidden"></div>
     </div>
-
-    <div id="ingredientView" style="display: none;">
-      <div id="drinkTitle" class="drink-title"></div>
-      <div id="ingredientList" class="ingredient-list"></div>
-    </div>
-
-
-    <div id="resultView" style="display: none;">
-      <p id="resultMessage"></p>
-      <p>Press <strong>Enter</strong> to continue</p>
-    </div>
-
-    <div id="daySummary" style="display: none;"></div>
   </div>
 </body>
+
 <script type="module" src="src/main.js"></script>
 
 </html>

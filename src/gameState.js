@@ -1,3 +1,5 @@
+import { showGameOverScreen } from "./viewController.js";
+
 export let currentDrink = null;
 let dayNumber = 1;
 let playerMoney = 0;
@@ -7,6 +9,7 @@ let typingStats = {
 };
 let customerIndex = 0;
 let totalCustomers = 0;
+let quota = 30;
 const MAX_TIP = 15;
 
 export let currentPhrase = null;
@@ -75,6 +78,7 @@ export function getDayNumber() {
 }
 export function advanceDay() {
   dayNumber++;
+  increaseQuota(); //cchange amount with difficulty or just linear growth?
 }
 export function resetDay(){
   dayNumber = 1;
@@ -107,7 +111,7 @@ export function getDifficulty() {
 }
 
 export function getCustomerCount(difficulty = getDifficulty()) {
-  const baseCustomers = 2;
+  const baseCustomers = 4;
   return Math.floor(baseCustomers + difficulty * 0.5);
 }
 
@@ -135,4 +139,16 @@ export function getCustomerIndex() {
 export function resetCustomerLoop() {
   customerIndex = 0;
   totalCustomers = 0;
+}
+export function getQuota() {
+  return quota;
+}
+
+export function increaseQuota() {
+  let increase = 15;
+  quota += increase;
+}
+
+export function resetQuota() {
+  quota = 50;
 }
