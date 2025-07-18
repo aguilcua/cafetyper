@@ -43,13 +43,30 @@ export function startOrderView() {
   container.innerHTML = '';
 
   //split the phrase into different words
-  phrase.split('').forEach((char, i) => {
+  let globalCharIndex = 0;
+phrase.split(' ').forEach((word, wordIdx) => {
+  const wordSpan = document.createElement('span');
+  wordSpan.classList.add('word');
+  word.split('').forEach((char) => {
     const span = document.createElement('span');
-    span.textContent = char === ' ' ? '\u00A0' : char;
+    span.textContent = char;
     span.classList.add('char');
-    if (i === 0) span.classList.add('active');
-    container.appendChild(span);
+    if (globalCharIndex === 0) span.classList.add('active');
+    wordSpan.appendChild(span);
+    globalCharIndex++;
   });
+
+  // Add space after the word unless it's the last one
+  if (wordIdx < phrase.split(' ').length - 1) {
+    const spaceSpan = document.createElement('span');
+    spaceSpan.textContent = '\u00A0';
+    spaceSpan.classList.add('char');
+    wordSpan.appendChild(spaceSpan);
+    globalCharIndex++;
+  }
+
+  container.appendChild(wordSpan);
+});
 
   window.addEventListener('keydown', handleTyping);
 }
@@ -60,7 +77,7 @@ function handleTyping(e) {
     console.log("Typing started");
   }
   const container = document.getElementById('phraseContainer');
-  const spans = container.querySelectorAll('span');
+  const spans = container.querySelectorAll('.char');
   const expectedChar = phrase[currentIndex];
 
   if (!expectedChar || currentIndex >= spans.length) return;

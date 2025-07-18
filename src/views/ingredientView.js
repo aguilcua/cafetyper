@@ -117,6 +117,8 @@ export function startIngredientView() {
     const charSpans = word.split("").map((char, i) => {
       const span = document.createElement("span");
       span.classList.add("char");
+      span.style.color = "white";
+      span.style.textShadow = "0 0 3px black, 0 0 2px black";
       span.textContent = char;
       if (i === 0) span.classList.add("active");
       wordBox.appendChild(span);
