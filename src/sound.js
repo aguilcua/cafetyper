@@ -9,11 +9,11 @@ const wrongKey = new Audio('src/sounds/key-wrong.mp3');
 
 keySounds.forEach(audio => {
   audio.preload = 'auto';
-  audio.volume = 0.4;
+  audio.volume = 0.5;
 });
 
 wrongKey.preload = 'auto';
-wrongKey.volume = 0.3;
+wrongKey.volume = 0.5;
 
 export function playRandomKeySound() {
   const sound = keySounds[Math.floor(Math.random() * keySounds.length)];

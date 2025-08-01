@@ -12,7 +12,7 @@ import {
   getDifficulty,
 } from "../gameState.js";
 import { playRandomKeySound, playWrongKeySound } from "../sound.js";
-import { setDaySummaryContent, showView } from "../viewController.js";
+import { renderHUD, setDaySummaryContent, showView } from "../viewController.js";
 import { startResultView } from "./resultView.js";
 
 let currentTargets = []; // tracks progress through each target word
@@ -102,7 +102,6 @@ export function startIngredientView() {
 
     const container = document.createElement("div");
     container.classList.add("ingredient");
-    //TODO add images of ingredients
     setIngredientBackground(container, ingredient);
     container.dataset.ingredient = ingredient;
 
@@ -138,6 +137,7 @@ export function startIngredientView() {
     });
   });
 
+  populateSidebarRecipes();
   window.addEventListener("keydown", handleGlobalTyping);
 }
 
@@ -145,6 +145,18 @@ let currentTarget = null;
 
 function handleGlobalTyping(e) {
   const key = e.key;
+
+  //consumable use
+  if (e.key === 'Enter') {
+  const used = useConsumable();
+  if (used?.id === 'instantComplete') {
+    window.removeEventListener('keydown', handleTyping);
+    document.getElementById('orderView').style.display = 'none';
+    // simulate instant completion
+    startIngredientView();
+    return;
+  }
+}
   if (key.length !== 1) return;
 
   currentTyped += key;
@@ -232,8 +244,7 @@ function handleGlobalTyping(e) {
     const tip = calculateTip(timeLeft, 60, 15); // 60s $15 max tip
     addMoney(tip);
 
-    const moneyDisplay = document.getElementById("moneyDisplay");
-    moneyDisplay.textContent = `Total: $${getMoney().toFixed(2)}`;
+    renderHUD();
     startResultView();
   }
 }
@@ -274,7 +285,7 @@ function setIngredientBackground(container, ingredient) {
   const imageBasePath = 'src/images/';
   const fallbackImage = `${imageBasePath}shoebill.jpg`;
   const normalized = ingredient.toLowerCase().replace(/\s+/g, '');
-  const imagePath = `${imageBasePath}${normalized}.jpg`;
+  const imagePath = `${imageBasePath}${normalized}.png`;
 
   const img = new Image();
   img.src = imagePath;
@@ -292,6 +303,19 @@ function setIngredientBackground(container, ingredient) {
   };
 }
 
+function populateSidebarRecipes() {
+  const recipeList = document.getElementById('recipeList');
+  recipeList.innerHTML = '';
+  for (const drink in drinks) {
+    const drinkData = drinks[drink];
+
+    const recipeLine = document.createElement('p');
+    recipeLine.textContent =
+      `${drink.charAt(0).toUpperCase() + drink.slice(1)} = ` + 
+      drinkData.ingredients.join(' + ');
+      recipeList.appendChild(recipeLine);
+  }
+}
 
 
 

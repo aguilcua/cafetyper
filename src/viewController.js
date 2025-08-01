@@ -1,3 +1,7 @@
+import { getCustomerCount, getCustomerIndex, getDayNumber, getItems, getMoney, getQuota } from "./gameState.js";
+import { renderItemShop } from "./views/itemShopView.js";
+
+
 const views = {
   startMenu: document.getElementById("startMenu"),
   orderView: document.getElementById("orderView"),
@@ -39,17 +43,32 @@ export function setDaySummaryContent(day, money, wpm) {
   };
 
   document.getElementById("shopButton").onclick = () => {
-    alert("Shop not implemented yet!");
+    renderItemShop();
+    showView('itemShop');
   };
 }
-export function showGameOverScreen(earned, quota) {
+export function showGameOverScreen(earned, quota, isTimeUp) {
+
   showHUD(false);
+  hideView("orderView");
+  hideView("ingredientView");
   const gameOver = document.getElementById("gameOverScreen");
-  gameOver.innerHTML = `
+
+  if(isTimeUp) {
+    gameOver.innerHTML = `
+    <h2>Game Over</h2>
+    <p>You ran out of time and your customers left very sad. :(</p>
+    <button id="restartBtn">Restart</button>
+  `;
+  gameOver.style.display = 'block';
+  } else {
+    gameOver.innerHTML = `
     <h2>Game Over</h2>
     <p>You earned $${earned.toFixed(2)} but needed $${quota.toFixed(2)}.</p>
     <button id="restartBtn">Restart</button>
   `;
+  }
+
   gameOver.style.display = 'block';
 
   document.getElementById('restartBtn').onclick = () => {
@@ -61,16 +80,48 @@ export function showHUD(flag) {
   const timerDisplay = document.getElementById("timerDisplay");
   const moneyDisplay = document.getElementById("moneyDisplay");
   const dayDisplay = document.getElementById("dayDisplay");
+  const itemDisplay = document.getElementById("itemDisplay");
   if (flag) {
     customerDisplay.style.display = "block";
     timerDisplay.style.display = "block";
     moneyDisplay.style.display = "block";
     dayDisplay.style.display = "block";
+    itemDisplay.style.display = "block";
   } else {
     customerDisplay.style.display = "none";
     timerDisplay.style.display = "none";
     moneyDisplay.style.display = "none";
     dayDisplay.style.display = "none";
+    itemDisplay.style.display = "none";
   }
 }
+export function renderActiveItems() {
+  const itemDisplay = document.getElementById('itemDisplay');
+  const { stackables, consumable, permanent } = getItems();
+  itemDisplay.innerHTML = '';
 
+  Object.entries(stackables).forEach(([id, count]) => {
+    const div = document.createElement('div');
+    div.textContent = `${id} x${count}`;
+    itemDisplay.appendChild(div);
+  });
+
+  if (consumable) {
+    const div = document.createElement('div');
+    div.textContent = `Consumable: ${consumable.name}`;
+    itemDisplay.appendChild(div);
+  }
+
+  permanent.forEach(id => {
+    const div = document.createElement('div');
+    div.textContent = `Permanent: ${id}`;
+    itemDisplay.appendChild(div);
+  });
+}
+
+export function renderHUD() {
+  document.getElementById('moneyDisplay').textContent = `${getMoney().toFixed(2)}/${getQuota().toFixed(2)}`;
+  document.getElementById('dayDisplay').textContent = `Day ${getDayNumber()}`;
+  document.getElementById('customerDisplay').textContent = `Customer ${getCustomerIndex()}/${getCustomerCount()}`;
+  renderActiveItems();
+}

@@ -1,4 +1,4 @@
-import { startNewDay } from "./main.js"; // ensure this is exported
+import { startNewDay } from "./main.js";
 import { startOrderView } from "./views/orderView.js";
 
 export function setupGlobalEnterKey() {

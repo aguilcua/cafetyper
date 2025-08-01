@@ -114,7 +114,7 @@ body {
   padding: 20px;
 }
 
-/* View container (e.g. order, ingredient) */
+/* View container (order, ingredient) */
 .view {
   background: rgba(255, 255, 255, 0.85);
   padding: 30px;
@@ -179,3 +179,51 @@ body {
   font-size: 36px;
   text-shadow: 2px 0px 2px #7F5539;
 }
+
+
+/* ------ SIDEBAR------- */
+.sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  overflow-x: hidden;
+  transition: width 0.3s ease;
+  z-index: 10;
+}
+
+.sidebar:hover {
+  width: 250px;
+}
+
+.sidebar-content {
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.sidebar:hover .sidebar-content {
+  opacity: 1;
+}
+
+#recipeList {
+  font-size: 0.9em;
+}
+
+#recipeList h4 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 1em;
+  color: #ffd;
+}
+
+#recipeList ul {
+  padding-left: 15px;
+  margin-bottom: 10px;
+}
+/* ------ SIDEBAR------- */

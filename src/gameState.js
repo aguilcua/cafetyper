@@ -1,5 +1,8 @@
-import { showGameOverScreen } from "./viewController.js";
+import {items as itemDefs} from "./items.js";
 
+
+const MAX_TIP = 15;
+const BASECUSTOMERS = 2;
 export let currentDrink = null;
 let dayNumber = 1;
 let playerMoney = 0;
@@ -10,11 +13,18 @@ let typingStats = {
 let customerIndex = 0;
 let totalCustomers = 0;
 let quota = 30;
-const MAX_TIP = 15;
+
+//item stuff
+let activeItems = {
+  stackables: {},
+  consumables: null,
+  permanent: [],
+};
 
 export let currentPhrase = null;
 export let requiredIngredients = [];
 export let usedIngredients = [];
+
 
 let timer = {
   remainingTime: 60,
@@ -28,6 +38,8 @@ let timer = {
     this.onTick = onTick;
     this.onTimeUp = onTimeUp;
 
+
+    this.onTick(this.remainingTime);
     this.intervalId = setInterval(() => {
       this.remainingTime -= 1;
       this.onTick(this.remainingTime);
@@ -78,7 +90,7 @@ export function getDayNumber() {
 }
 export function advanceDay() {
   dayNumber++;
-  increaseQuota(); //cchange amount with difficulty or just linear growth?
+  increaseQuota(); //change amount with difficulty or just linear growth?
 }
 export function resetDay(){
   dayNumber = 1;
@@ -93,7 +105,16 @@ export function getMoney() {
 
 export function calculateTip(timeRemaining, totalTime = 60, maxTip = MAX_TIP) {
   const proportion = Math.max(0, (timeRemaining + 2) / totalTime);
-  return Math.round(proportion * maxTip * 100) / 100; //round to 2 decimals
+  let tip = Math.round(proportion * maxTip * 100) / 100;
+
+  const {stackables} = getItems();
+  if (stackables['bonusTip']) {
+    for (let i = 0; i < stackables['bonusTip']; i++) {
+      tip = itemDefs.bonusTip.effect(tip);
+    }
+  }
+
+  return Math.round(tip * 100) / 100;
 }
 export function getDifficulty() {
   const base = 1;
@@ -111,8 +132,7 @@ export function getDifficulty() {
 }
 
 export function getCustomerCount(difficulty = getDifficulty()) {
-  const baseCustomers = 4;
-  return Math.floor(baseCustomers + difficulty * 0.5);
+  return Math.floor(BASECUSTOMERS + difficulty * 0.5);
 }
 
 function extraOrderChance(difficulty) {
@@ -126,7 +146,7 @@ export function startCustomerLoop() {
 }
 
 export function hasNextCustomer() {
-  return customerIndex <= totalCustomers;
+  return customerIndex < totalCustomers;
 }
 
 export function nextCustomer() {
@@ -151,4 +171,35 @@ export function increaseQuota() {
 
 export function resetQuota() {
   quota = 50;
+}
+
+export function addItem(item) {
+  if (item.type === 'stackable') {
+    if (!activeItems.stackables[item.id]) {
+      activeItems.stackables[item.id] = 0;
+    }
+    activeItems.stackables[item.id]++;
+  } else if (item.type === 'consumable') {
+    activeItems.consumable = item;
+  } else if(item.type === 'permanent') {
+    if (!activeItems.permanent.includes(item.id)) {
+      activeItems.permanent.push(item.id);
+    }
+  }
+}
+export function getItems() {
+  return activeItems;
+}
+export function useConsumable() {
+  const used = activeItems.consumable;
+  activeItems.consumable = null;
+  return used;
+}
+
+export function resetItems() {
+  activeItems = {
+    stackables: {},
+    consumable: null,
+    permanent: [],
+  };
 }

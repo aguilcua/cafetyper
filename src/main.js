@@ -1,6 +1,14 @@
-
-import { advanceDay, getMoney, getQuota, hasNextCustomer, nextCustomer, resetCustomerLoop, resetState, startCustomerLoop } from "./gameState.js";
-import { showGameOverScreen, showView } from "./viewController.js";
+import {
+  advanceDay,
+  getMoney,
+  getQuota,
+  hasNextCustomer,
+  nextCustomer,
+  resetCustomerLoop,
+  resetState,
+  startCustomerLoop,
+} from "./gameState.js";
+import { renderActiveItems, showGameOverScreen, showView } from "./viewController.js";
 import { showDaySummary } from "./views/ingredientView.js";
 import { startOrderView } from "./views/orderView.js";
 
@@ -22,9 +30,9 @@ window.addEventListener("resultContinue", () => {
   const quota = getQuota();
 
   if (hasNextCustomer()) {
-    nextCustomer();
     startOrderView();
-  } else if(earned < quota) {
+    nextCustomer();
+  } else if (earned < quota) {
     showGameOverScreen(earned, quota);
   } else {
     advanceDay();
@@ -35,8 +43,8 @@ window.addEventListener("resultContinue", () => {
 window.addEventListener("nextDay", () => {
   advanceDay();
   resetCustomerLoop();
+  renderActiveItems();
   resetState();
   showView("orderView");
   startOrderView();
 });
-

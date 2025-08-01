@@ -1,7 +1,7 @@
 import { customerOrders } from '../data.js';
-import { resetState, setCurrentDrink, setTypingStats, getTimer, getCustomerIndex, getCustomerCount, getMoney, getQuota } from '../gameState.js';
+import { resetState, setCurrentDrink, setTypingStats, getTimer, getCustomerIndex, getCustomerCount, getMoney, getQuota, getItems } from '../gameState.js';
 import { playRandomKeySound, playWrongKeySound } from '../sound.js';
-import { showGameOverScreen, showHUD } from '../viewController.js';
+import { renderActiveItems, renderHUD, showGameOverScreen, showHUD } from '../viewController.js';
 import { startIngredientView } from './ingredientView.js';
 
 let phrase = '';
@@ -11,12 +11,16 @@ let errorCount = 0;
 let order = null;
 
 export function startOrderView() {
+  const itemState = getItems();
+  let startTime = 60;
+  if (itemState.permanent.includes('fasterTimer')) {
+    startTime += 10;
+  }
   typingStartTime = 0; //upon new order typing speed is reset
   const timer = getTimer();
-  timer.start(45, updateTimerUI, () => {
-    console.log("Times up!");
-    //do something when your time is up
-    showGameOverScreen(getMoney(), getQuota());
+  timer.stop();
+  timer.start(startTime, updateTimerUI, () => {
+    showGameOverScreen(getMoney(), getQuota(), true);
   });
 
   function updateTimerUI(time) {
@@ -26,9 +30,8 @@ export function startOrderView() {
   resetState();
   errorCount = 0;
 
-  
-  const customerDisplay = document.getElementById("customerDisplay");
-  customerDisplay.textContent = `Customer ${getCustomerIndex() + 1}/${getCustomerCount()}`;
+  renderHUD();
+  renderActiveItems();
   showHUD(true);
 
   //pick a random order from list of orders

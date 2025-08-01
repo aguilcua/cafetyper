@@ -115,7 +115,12 @@ export const customerOrders = [
     drink: "black",
     length: 143,
   },
-  {quote: "Look at that subtle off-white coloring, the tasteful thickness of it. Oh my God. It even has a extra foam.", drink: "macchiato", length: 106},
+  {
+    quote:
+      "Look at that subtle off-white coloring, the tasteful thickness of it. Oh my God. It even has extra foam.",
+    drink: "macchiato",
+    length: 104,
+  },
 ];
 
 export const wordPool = {

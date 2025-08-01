@@ -1,4 +1,4 @@
-import { currentDrink, getCustomerIndex, getCustomerCount, nextCustomer, hasNextCustomer, advanceDay, getDayNumber } from '../gameState.js';
+import { currentDrink } from '../gameState.js';
 import { showView } from '../viewController.js';
 
 export function startResultView() {
